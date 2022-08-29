@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "NServiceBusEndpoint": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

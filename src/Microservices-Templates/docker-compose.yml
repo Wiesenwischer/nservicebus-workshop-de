@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  nservicebusendpoint:
+    image: ${DOCKER_REGISTRY-}nservicebusendpoint
+    build:
+      context: .
+      dockerfile: NServiceBusEndpoint/Dockerfile
