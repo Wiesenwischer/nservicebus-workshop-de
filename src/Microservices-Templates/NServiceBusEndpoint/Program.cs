@@ -1,9 +1,10 @@
+using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using NServiceBus;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
-using NServiceBus;
-using Microsoft.Extensions.Logging;
 
 namespace NServiceBusEndpoint
 {
@@ -38,14 +39,31 @@ namespace NServiceBusEndpoint
                     // TODO: remove this condition after choosing a transport, persistence and deployment method suitable for production
                     if (Environment.UserInteractive && Debugger.IsAttached)
                     {
-                        // TODO: choose a durable transport for production
-                        // https://docs.particular.net/transports/
-                        var transportExtensions = endpointConfiguration.UseTransport<LearningTransport>();
-                        transportExtensions.StorageDirectory(".learningtransport");
+                        var connection = @"Data Source=sqldb;Database=Messaging;User ID=sa;Password=P@ssw0rd!#;Max Pool Size=100";
 
-                        // TODO: choose a durable persistence for production
-                        // https://docs.particular.net/persistence/
-                        endpointConfiguration.UsePersistence<LearningPersistence>();
+                        var transport = endpointConfiguration.UseTransport<SqlServerTransport>();
+                        transport.ConnectionString(connection);
+                        transport.DefaultSchema("dbo");
+                        transport.UseSchemaForQueue("error", "dbo");
+                        transport.UseSchemaForQueue("audit", "dbo");
+
+                        var subscriptions = transport.SubscriptionSettings();
+                        subscriptions.DisableSubscriptionCache();
+
+                        subscriptions.SubscriptionTableName(
+                            tableName: "Subscriptions",
+                            schemaName: "dbo");
+
+                        var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
+                        persistence.ConnectionBuilder(
+                            connectionBuilder: () =>
+                            {
+                                return new SqlConnection(connection);
+                            });
+                        var dialect = persistence.SqlDialect<SqlDialect.MsSqlServer>();
+                        persistence.TablePrefix("");
+
+                        endpointConfiguration.EnableOutbox();
 
                         // TODO: create a script for deployment to production
                         endpointConfiguration.EnableInstallers();
