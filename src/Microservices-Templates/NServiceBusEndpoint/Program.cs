@@ -1,9 +1,12 @@
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NServiceBus;
+using NServiceBusEndpoint.Infrastructure;
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace NServiceBusEndpoint
@@ -14,11 +17,16 @@ namespace NServiceBusEndpoint
 
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+            host.MigrateDbContext<ApplicationDbContext>((_, __) => { });
+
+            host.Run();
         }
 
         static IHostBuilder CreateHostBuilder(string[] args)
         {
+            var connection = @"Data Source=sqldb;Database=Messaging;User ID=sa;Password=P@ssw0rd!#;Max Pool Size=100;Trust Server Certificate=True";
+
             return Host.CreateDefaultBuilder(args)
                 .UseConsoleLifetime()
                 .ConfigureLogging(logging =>
@@ -36,49 +44,51 @@ namespace NServiceBusEndpoint
 
                     endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
 
-                    // TODO: remove this condition after choosing a transport, persistence and deployment method suitable for production
-                    if (Environment.UserInteractive && Debugger.IsAttached)
-                    {
-                        var connection = @"Data Source=sqldb;Database=Messaging;User ID=sa;Password=P@ssw0rd!#;Max Pool Size=100";
+                    var transport = endpointConfiguration.UseTransport<SqlServerTransport>();
+                    transport.ConnectionString(connection);
+                    transport.DefaultSchema("dbo");
+                    transport.UseSchemaForQueue("error", "dbo");
+                    transport.UseSchemaForQueue("audit", "dbo");
 
-                        var transport = endpointConfiguration.UseTransport<SqlServerTransport>();
-                        transport.ConnectionString(connection);
-                        transport.DefaultSchema("dbo");
-                        transport.UseSchemaForQueue("error", "dbo");
-                        transport.UseSchemaForQueue("audit", "dbo");
+                    var subscriptions = transport.SubscriptionSettings();
+                    subscriptions.DisableSubscriptionCache();
 
-                        var subscriptions = transport.SubscriptionSettings();
-                        subscriptions.DisableSubscriptionCache();
+                    subscriptions.SubscriptionTableName(
+                        tableName: "Subscriptions",
+                        schemaName: "dbo");
 
-                        subscriptions.SubscriptionTableName(
-                            tableName: "Subscriptions",
-                            schemaName: "dbo");
+                    var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
+                    persistence.ConnectionBuilder(
+                        connectionBuilder: () =>
+                        {
+                            return new SqlConnection(connection);
+                        });
+                    var dialect = persistence.SqlDialect<SqlDialect.MsSqlServer>();
+                    dialect.Schema(ApplicationDbContext.DefaultSchema);
+                    persistence.TablePrefix("");
 
-                        var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
-                        persistence.ConnectionBuilder(
-                            connectionBuilder: () =>
-                            {
-                                return new SqlConnection(connection);
-                            });
-                        var dialect = persistence.SqlDialect<SqlDialect.MsSqlServer>();
-                        persistence.TablePrefix("");
+                    endpointConfiguration.EnableOutbox();
 
-                        endpointConfiguration.EnableOutbox();
-
-                        // TODO: create a script for deployment to production
-                        endpointConfiguration.EnableInstallers();
-                    }
-
-                    // TODO: replace the license.xml file with your license file
+                    endpointConfiguration.EnableInstallers();
 
                     return endpointConfiguration;
+                })
+                .ConfigureServices(services =>
+                {
+                    services.AddDbContext<ApplicationDbContext>(options =>
+                           {
+                               options.UseSqlServer(connection,
+                                   sqlServerOptionsAction: sqlOptions =>
+                                   {
+                                       sqlOptions.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
+                                       sqlOptions.EnableRetryOnFailure(maxRetryCount: 10, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+                                   });
+                           });
                 });
         }
 
         static async Task OnCriticalError(ICriticalErrorContext context)
         {
-            // TODO: decide if stopping the endpoint and exiting the process is the best response to a critical error
-            // https://docs.particular.net/nservicebus/hosting/critical-errors
             try
             {
                 await context.Stop();
