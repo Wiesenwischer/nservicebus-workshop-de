@@ -1,1 +1,13 @@
 version: '3.4'
+
+services:
+  sqldb:
+    ports:
+      - "1533:1433"
+    environment:
+      SA_PASSWORD: "P@ssw0rd!#"
+      ACCEPT_EULA: "Y"
+
+  nservicebusendpoint:
+    environment:
+      - DOTNET_ENVIRONMENT=Development

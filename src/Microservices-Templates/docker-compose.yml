@@ -3,11 +3,6 @@ version: '3.4'
 services:
   sqldb:
     image: "mcr.microsoft.com/mssql/server"
-    ports:
-      - "1533:1433"
-    environment:
-      SA_PASSWORD: "P@ssw0rd!#"
-      ACCEPT_EULA: "Y"
 
   nservicebusendpoint:
     image: ${DOCKER_REGISTRY-}nservicebusendpoint
