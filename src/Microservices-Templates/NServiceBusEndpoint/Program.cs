@@ -1,12 +1,15 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NServiceBus;
 using NServiceBusEndpoint.Infrastructure;
+using Serilog;
 using System;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace NServiceBusEndpoint
@@ -15,20 +18,43 @@ namespace NServiceBusEndpoint
     {
         private const string EndpointName = "NServiceBusEndpoint";
 
-        public static void Main(string[] args)
+        public static int Main(string[] args)
         {
-            var host = CreateHostBuilder(args).Build();
-            host.MigrateDbContext<ApplicationDbContext>((_, __) => { });
+            var configuration = GetConfiguration();
+            Log.Logger = configuration.CreateSerilogLogger(EndpointName);
+            ConfigureNServiceBusLogging();
 
-            host.Run();
+            try
+            {
+                Log.Information("Configuring web host ({ApplicationContext})...", EndpointName);
+                var host = CreateHostBuilder(args, configuration)
+                    .Build();
+
+                host.MigrateDbContext<ApplicationDbContext>((_, __) => { });
+
+                Log.Information("Starting web host ({ApplicationContext})...", EndpointName);
+                host.Run();
+
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Program terminated unexpectedly ({ApplicationContext})!", EndpointName);
+                return 1;
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
         }
 
-        static IHostBuilder CreateHostBuilder(string[] args)
+        static IHostBuilder CreateHostBuilder(string[] args, IConfiguration configuration)
         {
             var connection = @"Data Source=sqldb;Database=Messaging;User ID=sa;Password=P@ssw0rd!#;Max Pool Size=100;Trust Server Certificate=True";
 
             return Host.CreateDefaultBuilder(args)
                 .UseConsoleLifetime()
+                .ConfigureAppConfiguration(x => x.AddConfiguration(configuration))
                 .ConfigureLogging(logging =>
                 {
                     logging.AddConsole();
@@ -73,6 +99,7 @@ namespace NServiceBusEndpoint
 
                     return endpointConfiguration;
                 })
+                .UseSerilog()
                 .ConfigureServices(services =>
                 {
                     services.AddDbContext<ApplicationDbContext>(options =>
@@ -103,14 +130,44 @@ namespace NServiceBusEndpoint
         {
             try
             {
-                // TODO: decide what kind of last resort logging is necessary
-                // TODO: when using an external logging framework it is important to flush any pending entries prior to calling FailFast
-                // https://docs.particular.net/nservicebus/hosting/critical-errors#when-to-override-the-default-critical-error-action
+                Log.Fatal(message, exception);
+                Log.CloseAndFlush();
             }
             finally
             {
                 Environment.FailFast(message, exception);
             }
+        }
+
+        static IConfiguration GetConfiguration()
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                .AddEnvironmentVariables();
+
+            return builder.Build();
+        }
+
+        static Serilog.ILogger CreateSerilogLogger(this IConfiguration configuration, string applicationContext)
+        {
+            string logstashUrl = configuration["Serilog:LogstashUrl"];
+
+            return new Serilog.LoggerConfiguration()
+                .MinimumLevel.Verbose()
+                .Enrich.WithProperty("ApplicationContext", applicationContext)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .WriteTo.Http(string.IsNullOrWhiteSpace(logstashUrl) ? "http://logstash:8080" : logstashUrl, null)
+                .ReadFrom.Configuration(configuration)
+                .CreateLogger();
+        }
+        
+        static void ConfigureNServiceBusLogging()
+        {
+            var extensionsLoggerFactory = new Serilog.Extensions.Logging.SerilogLoggerFactory();
+            var nservicebusLoggerFactory = new NServiceBus.Extensions.Logging.ExtensionsLoggerFactory(extensionsLoggerFactory);
+            NServiceBus.Logging.LogManager.UseFactory(nservicebusLoggerFactory);
         }
     }
 }
