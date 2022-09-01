@@ -1,12 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Polly;
-using System;
-
-namespace Microsoft.AspNetCore.Hosting
+﻿namespace Microsoft.Extensions.Hosting
 {
     public static class HostExtensions
     {
@@ -18,7 +10,7 @@ namespace Microsoft.AspNetCore.Hosting
 
                 var logger = services.GetRequiredService<ILogger<TContext>>();
 
-                var context = services.GetService<TContext>();
+                var context = services.GetRequiredService<TContext>();
 
                 try
                 {
