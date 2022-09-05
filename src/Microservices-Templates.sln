@@ -11,6 +11,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hosting.Customization", "BuildingBlocks\Hosting.Customization\Hosting.Customization.csproj", "{784F2516-9C35-41BF-98FC-5E548F2CEB0B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NServiceBus.Customization", "BuildingBlocks\NServiceBus.Customization\NServiceBus.Customization.csproj", "{002A4112-113C-406F-973F-476C02F50208}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NServiceBus.Customization.SqlServer", "BuildingBlocks\NServiceBus.Customization.SqlServer\NServiceBus.Customization.SqlServer.csproj", "{FCF7501C-C134-476C-80D9-0512B469A6AD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,12 +61,38 @@ Global
 		{784F2516-9C35-41BF-98FC-5E548F2CEB0B}.Release|x64.Build.0 = Release|Any CPU
 		{784F2516-9C35-41BF-98FC-5E548F2CEB0B}.Release|x86.ActiveCfg = Release|Any CPU
 		{784F2516-9C35-41BF-98FC-5E548F2CEB0B}.Release|x86.Build.0 = Release|Any CPU
+		{002A4112-113C-406F-973F-476C02F50208}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{002A4112-113C-406F-973F-476C02F50208}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{002A4112-113C-406F-973F-476C02F50208}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{002A4112-113C-406F-973F-476C02F50208}.Debug|x64.Build.0 = Debug|Any CPU
+		{002A4112-113C-406F-973F-476C02F50208}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{002A4112-113C-406F-973F-476C02F50208}.Debug|x86.Build.0 = Debug|Any CPU
+		{002A4112-113C-406F-973F-476C02F50208}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{002A4112-113C-406F-973F-476C02F50208}.Release|Any CPU.Build.0 = Release|Any CPU
+		{002A4112-113C-406F-973F-476C02F50208}.Release|x64.ActiveCfg = Release|Any CPU
+		{002A4112-113C-406F-973F-476C02F50208}.Release|x64.Build.0 = Release|Any CPU
+		{002A4112-113C-406F-973F-476C02F50208}.Release|x86.ActiveCfg = Release|Any CPU
+		{002A4112-113C-406F-973F-476C02F50208}.Release|x86.Build.0 = Release|Any CPU
+		{FCF7501C-C134-476C-80D9-0512B469A6AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCF7501C-C134-476C-80D9-0512B469A6AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCF7501C-C134-476C-80D9-0512B469A6AD}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FCF7501C-C134-476C-80D9-0512B469A6AD}.Debug|x64.Build.0 = Debug|Any CPU
+		{FCF7501C-C134-476C-80D9-0512B469A6AD}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FCF7501C-C134-476C-80D9-0512B469A6AD}.Debug|x86.Build.0 = Debug|Any CPU
+		{FCF7501C-C134-476C-80D9-0512B469A6AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCF7501C-C134-476C-80D9-0512B469A6AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FCF7501C-C134-476C-80D9-0512B469A6AD}.Release|x64.ActiveCfg = Release|Any CPU
+		{FCF7501C-C134-476C-80D9-0512B469A6AD}.Release|x64.Build.0 = Release|Any CPU
+		{FCF7501C-C134-476C-80D9-0512B469A6AD}.Release|x86.ActiveCfg = Release|Any CPU
+		{FCF7501C-C134-476C-80D9-0512B469A6AD}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{784F2516-9C35-41BF-98FC-5E548F2CEB0B} = {F8B4DCC8-F77D-42ED-AADD-6550219D4195}
+		{002A4112-113C-406F-973F-476C02F50208} = {F8B4DCC8-F77D-42ED-AADD-6550219D4195}
+		{FCF7501C-C134-476C-80D9-0512B469A6AD} = {F8B4DCC8-F77D-42ED-AADD-6550219D4195}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DD06863C-5CE5-40AC-ABAD-E59E545BBCA9}

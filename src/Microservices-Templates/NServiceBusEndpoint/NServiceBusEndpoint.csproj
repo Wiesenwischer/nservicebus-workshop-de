@@ -21,9 +21,6 @@
     <PackageReference Include="NServiceBus" Version="7.4.0" />
     <PackageReference Include="NServiceBus.Extensions.Hosting" Version="1.1.0" />
     <PackageReference Include="NServiceBus.Extensions.Logging" Version="1.0.0" />
-    <PackageReference Include="NServiceBus.Newtonsoft.Json" Version="2.2.0" />
-    <PackageReference Include="NServiceBus.Persistence.Sql" Version="6.5.1" />
-    <PackageReference Include="NServiceBus.Transport.SqlServer" Version="6.3.4" />
     <PackageReference Include="Serilog" Version="2.11.0" />
     <PackageReference Include="Serilog.Extensions.Hosting" Version="5.0.1" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="3.1.0" />
@@ -34,6 +31,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\BuildingBlocks\Hosting.Customization\Hosting.Customization.csproj" />
+    <ProjectReference Include="..\..\BuildingBlocks\NServiceBus.Customization.SqlServer\NServiceBus.Customization.SqlServer.csproj" />
+    <ProjectReference Include="..\..\BuildingBlocks\NServiceBus.Customization\NServiceBus.Customization.csproj" />
   </ItemGroup>
 
   <ItemGroup>

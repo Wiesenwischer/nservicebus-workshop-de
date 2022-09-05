@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="NServiceBus" Version="7.4.0" />
+		<PackageReference Include="NServiceBus.Persistence.Sql" Version="6.5.1" />
+		<PackageReference Include="NServiceBus.Transport.SqlServer" Version="6.3.4" />
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.0.0" />
+	</ItemGroup>
+</Project>

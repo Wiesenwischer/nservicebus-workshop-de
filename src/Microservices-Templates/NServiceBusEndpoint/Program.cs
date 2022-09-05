@@ -58,8 +58,6 @@ void ConfigureNServiceBusLogging()
 
 IHostBuilder CreateHostBuilder(string[] args, IConfiguration configuration)
 {
-    var connection = @"Data Source=sqldb;Database=Messaging;User ID=sa;Password=P@ssw0rd!#;Max Pool Size=100;Trust Server Certificate=True";
-
     return Host.CreateDefaultBuilder(args)
         .UseConsoleLifetime()
         .ConfigureAppConfiguration(x => x.AddConfiguration(configuration))
@@ -69,41 +67,15 @@ IHostBuilder CreateHostBuilder(string[] args, IConfiguration configuration)
         })
         .UseNServiceBus(ctx =>
         {
-            // TODO: consider moving common endpoint configuration into a shared project
-            // for use by all endpoints in the system
-
-            var endpointConfiguration = new EndpointConfiguration(EndpointName);
-
-            endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
-
-            endpointConfiguration.DefineCriticalErrorAction(OnCriticalError);
-
-            var transport = endpointConfiguration.UseTransport<SqlServerTransport>();
-            transport.ConnectionString(connection);
-            transport.DefaultSchema("dbo");
-            transport.UseSchemaForQueue("error", "dbo");
-            transport.UseSchemaForQueue("audit", "dbo");
-
-            var subscriptions = transport.SubscriptionSettings();
-            subscriptions.DisableSubscriptionCache();
-
-            subscriptions.SubscriptionTableName(
-                tableName: "Subscriptions",
-                schemaName: "dbo");
-
-            var persistence = endpointConfiguration.UsePersistence<SqlPersistence>();
-            persistence.ConnectionBuilder(
-                connectionBuilder: () =>
+            var endpointConfiguration = EndpointConfigurationBuilder.Configure(EndpointName)
+                .WithDefaults()
+                .FailFastOnCriticalError((msg, ex) =>
                 {
-                    return new SqlConnection(connection);
-                });
-            var dialect = persistence.SqlDialect<SqlDialect.MsSqlServer>();
-            dialect.Schema(ApplicationDbContext.DefaultSchema);
-            persistence.TablePrefix("");
-
-            endpointConfiguration.EnableOutbox();
-
-            endpointConfiguration.EnableInstallers();
+                    Log.Fatal(msg, ex);
+                    Log.CloseAndFlush();
+                })
+                .UseSqlServer(configuration.GetConnectionString(TransportConnectionStringName),
+                    schemaName: ApplicationDbContext.DefaultSchema);
 
             return endpointConfiguration;
         })
@@ -112,7 +84,7 @@ IHostBuilder CreateHostBuilder(string[] args, IConfiguration configuration)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(connection,
+                options.UseSqlServer(configuration.GetConnectionString(TransportConnectionStringName),
                         sqlServerOptionsAction: sqlOptions =>
                            {
                                sqlOptions.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
@@ -122,32 +94,8 @@ IHostBuilder CreateHostBuilder(string[] args, IConfiguration configuration)
         });
 }
 
-async Task OnCriticalError(ICriticalErrorContext context)
-{
-    try
-    {
-        await context.Stop();
-    }
-    finally
-    {
-        FailFast($"Critical error, shutting down: {context.Error}", context.Exception);
-    }
-}
-
-void FailFast(string message, Exception exception)
-{
-    try
-    {
-        Log.Fatal(message, exception);
-        Log.CloseAndFlush();
-    }
-    finally
-    {
-        Environment.FailFast(message, exception);
-    }
-}
-
 public partial class Program
 {
     private const string EndpointName = "NServiceBusEndpoint";
+    private const string TransportConnectionStringName = "ServiceBus";
 }
