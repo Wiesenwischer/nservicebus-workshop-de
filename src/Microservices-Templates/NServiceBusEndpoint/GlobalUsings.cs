@@ -1,5 +1,4 @@
-﻿global using Microsoft.Data.SqlClient;
-global using Microsoft.EntityFrameworkCore;
+﻿global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Design;
 global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
@@ -9,5 +8,5 @@ global using NServiceBus;
 global using NServiceBusEndpoint.Infrastructure;
 global using Serilog;
 global using System;
+global using System.Collections.Generic;
 global using System.IO;
-global using System.Threading.Tasks;

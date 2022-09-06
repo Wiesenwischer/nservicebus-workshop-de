@@ -75,7 +75,19 @@ IHostBuilder CreateHostBuilder(string[] args, IConfiguration configuration)
                     Log.CloseAndFlush();
                 })
                 .UseSqlServer(configuration.GetConnectionString(TransportConnectionStringName),
-                    schemaName: ApplicationDbContext.DefaultSchema);
+                    schemaName: ApplicationDbContext.DefaultSchema,
+                    routing =>
+                    {
+                        // Here we configure our message routing
+                        // routing.RouteToEndpoint(typeof(MyMessage), "DestinationEndpointName");
+                        // routing.RouteToEndpoint(typeof(MyMessage).Assembly, "DestinationEndpointName");
+                    },
+                    endpointToSchemaMappings: new Dictionary<string, string>()
+                    {
+                        // Here we configure our endpoint schema mappings
+                        // { "MyEndpoint1", "Schema1" },
+                        // { "MyEndpoint2", "Schema2 "}
+                    });
 
             return endpointConfiguration;
         })

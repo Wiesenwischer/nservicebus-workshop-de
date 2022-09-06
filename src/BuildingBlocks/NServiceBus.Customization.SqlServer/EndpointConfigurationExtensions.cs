@@ -3,11 +3,11 @@
 public static class EndpointConfigurationExtensions
 {
     public static EndpointConfiguration UseSqlServer(this EndpointConfiguration endpointConfiguration,
-        string connectionString, string schemaName)
+        string connectionString, string schemaName, Action<RoutingSettings<SqlServerTransport>> configureRouting, Dictionary<string, string> endpointToSchemaMappings)
     {
         var transport = endpointConfiguration.UseTransport<SqlServerTransport>();
         transport.ConnectionString(connectionString);
-        transport.DefaultSchema("dbo");
+        transport.DefaultSchema(schemaName);
         transport.UseSchemaForQueue("error", "dbo");
         transport.UseSchemaForQueue("audit", "dbo");
 
@@ -25,6 +25,21 @@ public static class EndpointConfigurationExtensions
         dialect.Schema(schemaName);
         persistence.TablePrefix("");
 
+        var routing = transport.Routing();
+        configureRouting?.Invoke(routing);
+
+        foreach ((string endpointName, string endpointSchema) in endpointToSchemaMappings)
+        {
+            transport.UseSchemaForEndpoint(endpointName, endpointSchema);
+        }
+
         return endpointConfiguration;
+    }
+
+    public static EndpointConfiguration UseSqlServer(this EndpointConfiguration endpointConfiguration,
+        string connectionString, string schemaName, Action<RoutingSettings<SqlServerTransport>> configureRouting)
+    {
+        return endpointConfiguration.UseSqlServer(connectionString, schemaName, configureRouting,
+            new Dictionary<string, string>());
     }
 }
