@@ -14,7 +14,14 @@ public static class EndpointConfigurationExtensions
         conventions.DefiningCommandsAs(t => t.Namespace != null && t.Namespace.EndsWith("Commands"));
         conventions.DefiningEventsAs(t => t.Namespace != null && t.Namespace.EndsWith("Events"));
         conventions.DefiningMessagesAs(t => t.Namespace != null && t.Namespace.EndsWith("Messages"));
-        
+
+        return endpointConfiguration;
+    }
+
+    public static EndpointConfiguration ConfigureCircuitBreaker(this EndpointConfiguration endpointConfiguration, int timeOutInMinutes)
+    {
+        endpointConfiguration.TimeToWaitBeforeTriggeringCriticalErrorOnTimeoutOutages(TimeSpan.FromMinutes(timeOutInMinutes));
+
         return endpointConfiguration;
     }
 

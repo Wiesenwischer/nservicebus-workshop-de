@@ -12,3 +12,4 @@ services:
     environment:
       - DOTNET_ENVIRONMENT=Development
       - ConnectionStrings__ServiceBus=Data Source=sqldb;Database=Messaging;User ID=sa;Password=P@ssw0rd!#;Max Pool Size=100;Trust Server Certificate=True
+      - ServiceBusTimeToWaitBeforeTriggeringCircuitBreaker=120
