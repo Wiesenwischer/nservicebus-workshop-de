@@ -10,6 +10,11 @@ public static class EndpointConfigurationExtensions
 
         endpointConfiguration.EnableInstallers();
 
+        var conventions = endpointConfiguration.Conventions();
+        conventions.DefiningCommandsAs(t => t.Namespace != null && t.Namespace.EndsWith("Commands"));
+        conventions.DefiningEventsAs(t => t.Namespace != null && t.Namespace.EndsWith("Events"));
+        conventions.DefiningMessagesAs(t => t.Namespace != null && t.Namespace.EndsWith("Messages"));
+        
         return endpointConfiguration;
     }
 
