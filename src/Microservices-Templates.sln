@@ -11,9 +11,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingB
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hosting.Customization", "BuildingBlocks\Hosting.Customization\Hosting.Customization.csproj", "{784F2516-9C35-41BF-98FC-5E548F2CEB0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NServiceBus.Customization", "BuildingBlocks\NServiceBus.Customization\NServiceBus.Customization.csproj", "{002A4112-113C-406F-973F-476C02F50208}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NServiceBus.Customization", "BuildingBlocks\NServiceBus.Customization\NServiceBus.Customization.csproj", "{002A4112-113C-406F-973F-476C02F50208}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NServiceBus.Customization.SqlServer", "BuildingBlocks\NServiceBus.Customization.SqlServer\NServiceBus.Customization.SqlServer.csproj", "{FCF7501C-C134-476C-80D9-0512B469A6AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NServiceBus.Customization.SqlServer", "BuildingBlocks\NServiceBus.Customization.SqlServer\NServiceBus.Customization.SqlServer.csproj", "{FCF7501C-C134-476C-80D9-0512B469A6AD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ITOps.HealthMonitor", "Microservices-Templates\ITOps.HealthMonitor\ITOps.HealthMonitor.csproj", "{645EB567-E9AF-4A6F-B8FF-EF8AEBE683E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,6 +87,18 @@ Global
 		{FCF7501C-C134-476C-80D9-0512B469A6AD}.Release|x64.Build.0 = Release|Any CPU
 		{FCF7501C-C134-476C-80D9-0512B469A6AD}.Release|x86.ActiveCfg = Release|Any CPU
 		{FCF7501C-C134-476C-80D9-0512B469A6AD}.Release|x86.Build.0 = Release|Any CPU
+		{645EB567-E9AF-4A6F-B8FF-EF8AEBE683E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{645EB567-E9AF-4A6F-B8FF-EF8AEBE683E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{645EB567-E9AF-4A6F-B8FF-EF8AEBE683E0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{645EB567-E9AF-4A6F-B8FF-EF8AEBE683E0}.Debug|x64.Build.0 = Debug|Any CPU
+		{645EB567-E9AF-4A6F-B8FF-EF8AEBE683E0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{645EB567-E9AF-4A6F-B8FF-EF8AEBE683E0}.Debug|x86.Build.0 = Debug|Any CPU
+		{645EB567-E9AF-4A6F-B8FF-EF8AEBE683E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{645EB567-E9AF-4A6F-B8FF-EF8AEBE683E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{645EB567-E9AF-4A6F-B8FF-EF8AEBE683E0}.Release|x64.ActiveCfg = Release|Any CPU
+		{645EB567-E9AF-4A6F-B8FF-EF8AEBE683E0}.Release|x64.Build.0 = Release|Any CPU
+		{645EB567-E9AF-4A6F-B8FF-EF8AEBE683E0}.Release|x86.ActiveCfg = Release|Any CPU
+		{645EB567-E9AF-4A6F-B8FF-EF8AEBE683E0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

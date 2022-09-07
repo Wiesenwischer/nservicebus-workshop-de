@@ -11,3 +11,9 @@ services:
       dockerfile: NServiceBusEndpoint/Dockerfile
     depends_on:
       - sqldb
+
+  itops.healthmonitor:
+    image: ${DOCKER_REGISTRY-}itopshealthmonitor
+    build:
+      context: .
+      dockerfile: ITOps.HealthMonitor/Dockerfile
