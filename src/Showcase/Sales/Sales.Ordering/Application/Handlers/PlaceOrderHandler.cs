@@ -1,4 +1,5 @@
 ﻿using Sales.Messages.Commands;
+using Sales.Messages.Events;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
 namespace Sales.Ordering.Application.Handlers;
@@ -16,7 +17,14 @@ public class PlaceOrderHandler :
     public Task Handle(PlaceOrder message, IMessageHandlerContext context)
     {
         _logger.LogInformation("Received PlaceOrder: {@Message}", message);
-        return Task.CompletedTask;
+
+        var orderPlaced = new OrderPlaced
+        {
+            OrderId = message.OrderId,
+            ClientId = message.ClientId,
+            ProductId = message.ProductId
+        };
+        return context.Publish(orderPlaced);
     }
 }
 
