@@ -1,8 +1,5 @@
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.ResponseCompression;
 using NServiceBus;
-using NServiceBus.Logging;
 using Sales.ECommerce.Data;
 using Sales.ECommerce.Hubs;
 using Serilog;
@@ -104,6 +101,6 @@ void ConfigureNServiceBusLogging()
 public partial class Program
 {
     private const string ContextName = "Sales";
-    private const string EndpointName = "Sales.ECommerce.Web";
+    private const string EndpointName = "ECommerce";
     private const string TransportConnectionStringName = "ServiceBus";
 }
