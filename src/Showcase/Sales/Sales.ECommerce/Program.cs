@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using NServiceBus;
 using Sales.ECommerce.Data;
 using Sales.ECommerce.Hubs;
+using Sales.Messages.Commands;
 using Serilog;
 
 var configuration = GetConfiguration();
@@ -20,7 +21,9 @@ builder.Services.AddResponseCompression(opts =>
         new[] { "application/octet-stream" });
 });
 
-builder.Host.UseNServiceBus(ctx =>
+builder.Host
+    .UseSerilog()
+    .UseNServiceBus(ctx =>
 {
     var endpointConfiguration = EndpointConfigurationBuilder.Configure(EndpointName)
         .WithDefaults()
@@ -34,13 +37,13 @@ builder.Host.UseNServiceBus(ctx =>
             routing =>
             {
                 // Here we configure our message routing
-                // routing.RouteToEndpoint(typeof(MyMessage), "DestinationEndpointName");
+                routing.RouteToEndpoint(typeof(PlaceOrder), "Ordering");
                 // routing.RouteToEndpoint(typeof(MyMessage).Assembly, "DestinationEndpointName");
             },
             endpointToSchemaMappings: new Dictionary<string, string>()
             {
                 // Here we configure our endpoint schema mappings
-                // { "MyEndpoint1", "Schema1" },
+                { "Ordering", "Sales" },
                 // { "MyEndpoint2", "Schema2 "}
             });
 

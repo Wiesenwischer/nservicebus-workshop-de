@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\BuildingBlocks\NServiceBus.Customization.SqlServer\NServiceBus.Customization.SqlServer.csproj" />
     <ProjectReference Include="..\..\..\BuildingBlocks\NServiceBus.Customization\NServiceBus.Customization.csproj" />
+    <ProjectReference Include="..\Sales.Messages\Sales.Messages.csproj" />
     <PackageReference Include="NServiceBus.Extensions.Hosting" Version="1.1.0" />
     <PackageReference Include="NServiceBus.Extensions.Logging" Version="1.0.0" />
     <PackageReference Include="Serilog" Version="2.11.0" />
