@@ -1,5 +1,7 @@
 # nservicebus-workshop-de
-In diesem Workshop erstellen wir von Grund und Schritt-für-Schritt auf einen neuen NServiceBus-Endpunkt und machen diesen für den Einsatz in Produktivumgebungen bereit. Danach erstellen wir uns eine Vorlage aus dem erstellten Code, um diese zu nutzen um einfach und schnell weitere solcher Endpunkte zu erstellen. 
+Dieser Workshop untergliedert sich in zwei Teile:
+- Der erste Teil beinhaltet eine Schritt-für-Schritt-Anweisung wie man von Grund auf einen neuen NServiceBus-Endpunkt erstellt und diesen für den Einsatz in Produktivumgebungen vorbereitet. 
+- Im zweiten Teil erstellen wir dann unter auf Grundlage des ersten Teils eine verteile Anwendung mit mehreren Endpunkten und lernen einige Grundlagen und Best Practces zur nachrichtenbasierten Kommunikation.
 
 ## Weiterführende Links
 - [Wiki](https://github.com/Wiesenwischer/nservicebus-workshop-de/wiki)
