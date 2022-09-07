@@ -4,7 +4,7 @@ public static class EndpointConfigurationExtensions
 {
     public static EndpointConfiguration WithDefaults(this EndpointConfiguration endpointConfiguration)
     {
-        endpointConfiguration.UseSerialization<NewtonsoftSerializer>();
+        endpointConfiguration.UseSerialization<NewtonsoftJsonSerializer>();
 
         endpointConfiguration.EnableOutbox();
 
