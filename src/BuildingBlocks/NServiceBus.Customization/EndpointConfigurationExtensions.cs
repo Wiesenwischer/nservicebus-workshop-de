@@ -18,13 +18,6 @@ public static class EndpointConfigurationExtensions
         return endpointConfiguration;
     }
 
-    public static EndpointConfiguration ConfigureCircuitBreaker(this EndpointConfiguration endpointConfiguration, int timeOutInMinutes)
-    {
-        endpointConfiguration.TimeToWaitBeforeTriggeringCriticalErrorOnTimeoutOutages(TimeSpan.FromMinutes(timeOutInMinutes));
-
-        return endpointConfiguration;
-    }
-
     public static EndpointConfiguration FailFastOnCriticalError(this EndpointConfiguration endpointConfiguration, Action<string, Exception> callback)
     {
         endpointConfiguration.DefineCriticalErrorAction(ctx => OnCriticalError(ctx, callback));
