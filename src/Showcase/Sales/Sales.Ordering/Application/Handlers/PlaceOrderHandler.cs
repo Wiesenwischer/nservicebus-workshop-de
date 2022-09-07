@@ -1,4 +1,5 @@
-﻿using Sales.Messages.Commands;
+﻿using System.Collections.Generic;
+using Sales.Messages.Commands;
 using Sales.Messages.Events;
 using ILogger = Microsoft.Extensions.Logging.ILogger;
 
@@ -26,5 +27,7 @@ public class PlaceOrderHandler :
         };
         return context.Publish(orderPlaced);
     }
+
+
 }
 

@@ -19,3 +19,10 @@ services:
       context: .
       dockerfile: showcase/sales/sales.ordering/Dockerfile
 
+
+  stock.inventory:
+    image: ${DOCKER_REGISTRY-}stockinventory
+    build:
+      context: .
+      dockerfile: Showcase/Stock/Stock.Inventory/Dockerfile
+

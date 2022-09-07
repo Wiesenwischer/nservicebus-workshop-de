@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "Stock.Inventory": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}

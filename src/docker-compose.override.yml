@@ -24,8 +24,15 @@ services:
       - ConnectionStrings__ServiceBus=Data Source=sqldb;Database=Showcase;User ID=sa;Password=P@ssw0rd!#;Max Pool Size=100;Trust Server Certificate=True
       - ServiceBusTimeToWaitBeforeTriggeringCircuitBreaker=5
 
+  stock.inventory:
+    environment:
+      - DOTNET_ENVIRONMENT=Development
+      - ConnectionStrings__ServiceBus=Data Source=sqldb;Database=Showcase;User ID=sa;Password=P@ssw0rd!#;Max Pool Size=100;Trust Server Certificate=True
+      - ServiceBusTimeToWaitBeforeTriggeringCircuitBreaker=5
+
 volumes:
   showcase-sqldata:
     external: false
+
 
 
