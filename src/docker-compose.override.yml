@@ -1,0 +1,24 @@
+version: '3.4'
+
+services:
+  sqldb:
+    ports:
+      - "1533:1433"
+    environment:
+      SA_PASSWORD: "P@ssw0rd!#"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - showcase-sqldata:/var/opt/mssql
+
+  sales.ecommerce:
+    ports:
+      - "80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__ServiceBus=Data Source=sqldb;Database=Showcase;User ID=sa;Password=P@ssw0rd!#;Max Pool Size=100;Trust Server Certificate=True
+      - ServiceBusTimeToWaitBeforeTriggeringCircuitBreaker=120
+
+volumes:
+  showcase-sqldata:
+    external: false
+
