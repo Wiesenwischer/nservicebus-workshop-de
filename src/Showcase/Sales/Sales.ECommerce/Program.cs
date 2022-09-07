@@ -37,17 +37,13 @@ builder.Host
         })
         .UseSqlServer(configuration.GetConnectionString(TransportConnectionStringName),
             schemaName: ContextName,
-            routing =>
+            transport =>
             {
                 // Here we configure our message routing
+                var routing = transport.Routing();
                 routing.RouteToEndpoint(typeof(PlaceOrder), "Ordering");
-                // routing.RouteToEndpoint(typeof(MyMessage).Assembly, "DestinationEndpointName");
-            },
-            endpointToSchemaMappings: new Dictionary<string, string>()
-            {
-                // Here we configure our endpoint schema mappings
-                { "Ordering", "Sales" },
-                // { "MyEndpoint2", "Schema2 "}
+
+                transport.UseSchemaForEndpoint("Ordering", "Sales");
             });
 
     return endpointConfiguration;

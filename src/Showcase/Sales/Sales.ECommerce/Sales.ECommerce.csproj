@@ -15,8 +15,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\BuildingBlocks\NServiceBus.Customization.SqlServer\NServiceBus.Customization.SqlServer.csproj" />
-    <ProjectReference Include="..\..\..\BuildingBlocks\NServiceBus.Customization\NServiceBus.Customization.csproj" />
     <ProjectReference Include="..\Sales.Messages\Sales.Messages.csproj" />
     <PackageReference Include="NServiceBus.Extensions.Hosting" Version="1.1.0" />
     <PackageReference Include="NServiceBus.Extensions.Logging" Version="1.0.0" />
@@ -28,6 +26,9 @@
     <PackageReference Include="Serilog.Sinks.Http" Version="8.0.0" />
     <PackageReference Include="Serilog.Exceptions" Version="8.4.0" />
     <PackageReference Include="Serilog.Exceptions.MsSqlServer" Version="8.4.0" />
+    <PackageReference Include="Wiesenwischer.Hosting.Customization" Version="0.1.4" />
+    <PackageReference Include="Wiesenwischer.NServiceBus.Customization" Version="0.1.2" />
+    <PackageReference Include="Wiesenwischer.NServiceBus.Customization.SqlServer" Version="0.1.2" />
   </ItemGroup>
 
 </Project>
