@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using NServiceBusEndpoint;
+using Polly;
 
 var configuration = GetConfiguration();
 Log.Logger = CreateSerilogLogger(configuration, EndpointName);
@@ -14,6 +16,9 @@ try
     host.MigrateDbContext<ApplicationDbContext>((_, __) => { });
 
     Log.Information("Starting web host ({ApplicationContext})...", EndpointName);
+
+    ServiceBusState = HealthCheckResult.Healthy();
+
     host.Run();
 
     return 0;
@@ -79,26 +84,27 @@ IHostBuilder CreateHostBuilder(string[] args, IConfiguration configuration)
             {
                 var endpointConfiguration = EndpointConfigurationBuilder.Configure(EndpointName)
                     .WithDefaults()
-                    .ConfigureCircuitBreaker(configuration.GetValue("ServiceBusTimeToWaitBeforeTriggeringCircuitBreaker",
-                        DefaultTimeInMinutesToWaitBeforeTriggeringCircuitBreaker))
                     .FailFastOnCriticalError((msg, ex) =>
                     {
+                        ServiceBusState = HealthCheckResult.Unhealthy("Critical error on endpoint", ex);
                         Log.Fatal(msg, ex);
                         Log.CloseAndFlush();
                     })
                     .UseSqlServer(configuration.GetConnectionString(TransportConnectionStringName),
                         schemaName: ApplicationDbContext.DefaultSchema,
-                        routing =>
+                        transport =>
                         {
+                            transport.TimeToWaitBeforeTriggeringCircuitBreaker(
+                                TimeSpan.FromMinutes(configuration.GetValue("ServiceBusTimeToWaitBeforeTriggeringCircuitBreaker",
+                                    DefaultTimeInMinutesToWaitBeforeTriggeringCircuitBreaker)));
+                            
                             // Here we configure our message routing
+                            // var routing = transport.Routing();
                             // routing.RouteToEndpoint(typeof(MyMessage), "DestinationEndpointName");
-                            // routing.RouteToEndpoint(typeof(MyMessage).Assembly, "DestinationEndpointName");
-                        },
-                        endpointToSchemaMappings: new Dictionary<string, string>()
-                        {
-                            // Here we configure our endpoint schema mappings
-                            // { "MyEndpoint1", "Schema1" },
-                            // { "MyEndpoint2", "Schema2 "}
+                            // routing.RouteToEndpoint(typeof(MyMessage).Assembly, "DestinationEndpointName")
+
+                            // Here we configure the schema mappings
+                            // transport.UseSchemaForEndpoint("MyEndpoint1", "Schema1");
                         });
 
                 return endpointConfiguration;
@@ -108,6 +114,7 @@ IHostBuilder CreateHostBuilder(string[] args, IConfiguration configuration)
 
 public partial class Program
 {
+    public static HealthCheckResult ServiceBusState { get; private set; }
     private const int DefaultTimeInMinutesToWaitBeforeTriggeringCircuitBreaker = 120;
     private const string EndpointName = "NServiceBusEndpoint";
     public const string TransportConnectionStringName = "ServiceBus";

@@ -3,7 +3,7 @@
 public static class EndpointConfigurationExtensions
 {
     public static EndpointConfiguration UseSqlServer(this EndpointConfiguration endpointConfiguration,
-        string connectionString, string schemaName, Action<RoutingSettings<SqlServerTransport>> configureRouting, Dictionary<string, string> endpointToSchemaMappings)
+        string connectionString, string schemaName, Action<TransportExtensions<SqlServerTransport>> configureTransport)
     {
         var transport = endpointConfiguration.UseTransport<SqlServerTransport>();
         transport.ConnectionString(connectionString);
@@ -25,13 +25,7 @@ public static class EndpointConfigurationExtensions
         dialect.Schema(schemaName);
         persistence.TablePrefix("");
 
-        var routing = transport.Routing();
-        configureRouting?.Invoke(routing);
-
-        foreach ((string endpointName, string endpointSchema) in endpointToSchemaMappings)
-        {
-            transport.UseSchemaForEndpoint(endpointName, endpointSchema);
-        }
+        configureTransport?.Invoke(transport);
 
         return endpointConfiguration;
     }
@@ -39,7 +33,6 @@ public static class EndpointConfigurationExtensions
     public static EndpointConfiguration UseSqlServer(this EndpointConfiguration endpointConfiguration,
         string connectionString, string schemaName, Action<RoutingSettings<SqlServerTransport>> configureRouting)
     {
-        return endpointConfiguration.UseSqlServer(connectionString, schemaName, configureRouting,
-            new Dictionary<string, string>());
+        return endpointConfiguration.UseSqlServer(connectionString, schemaName, configureRouting);
     }
 }
