@@ -2,7 +2,7 @@
 
 public class ApplicationDbContext : DbContext
 {
-    public const string DefaultSchema = "Sales.Ordering";
+    public const string DefaultSchema = "Sales";
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {

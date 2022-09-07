@@ -5,7 +5,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
 	<GenerateErrorForMissingTargetingPacks>false</GenerateErrorForMissingTargetingPacks>
-	<DockerfileContext>..\..</DockerfileContext>	  
+	<DockerfileContext>..\..\..</DockerfileContext>	  
   </PropertyGroup>
 
   <ItemGroup>
@@ -34,6 +34,10 @@
     <PackageReference Include="Wiesenwischer.Hosting.Customization" Version="0.1.4" />
     <PackageReference Include="Wiesenwischer.NServiceBus.Customization" Version="0.1.2" />
     <PackageReference Include="Wiesenwischer.NServiceBus.Customization.SqlServer" Version="0.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Sales.Messages\Sales.Messages.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -111,6 +111,6 @@ public partial class Program
 {
     public static HealthCheckResult ServiceBusState { get; private set; }
     private const int DefaultTimeInMinutesToWaitBeforeTriggeringCircuitBreaker = 120;
-    private const string EndpointName = "Sales.Ordering";
+    private const string EndpointName = "Ordering";
     public const string TransportConnectionStringName = "ServiceBus";
 }
