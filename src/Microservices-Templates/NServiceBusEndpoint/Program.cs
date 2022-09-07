@@ -1,3 +1,6 @@
+using Microsoft.AspNetCore.Hosting;
+using NServiceBusEndpoint;
+
 var configuration = GetConfiguration();
 Log.Logger = CreateSerilogLogger(configuration, EndpointName);
 ConfigureNServiceBusLogging();
@@ -62,6 +65,10 @@ void ConfigureNServiceBusLogging()
 IHostBuilder CreateHostBuilder(string[] args, IConfiguration configuration)
 {
     return Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(builder =>
+            {
+                builder.UseStartup<Startup>();
+            })
             .UseConsoleLifetime()
             .ConfigureAppConfiguration(x => x.AddConfiguration(configuration))
             .ConfigureLogging(logging =>
@@ -96,24 +103,12 @@ IHostBuilder CreateHostBuilder(string[] args, IConfiguration configuration)
 
                 return endpointConfiguration;
             })
-            .UseSerilog()
-            .ConfigureServices(services =>
-            {
-                services.AddDbContext<ApplicationDbContext>(options =>
-                {
-                    options.UseSqlServer(configuration.GetConnectionString(TransportConnectionStringName),
-                            sqlServerOptionsAction: sqlOptions =>
-                               {
-                                   sqlOptions.MigrationsAssembly(typeof(Program).Assembly.GetName().Name);
-                                   sqlOptions.EnableRetryOnFailure(maxRetryCount: 10, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
-                               });
-                });
-            });
+            .UseSerilog();
 }
 
 public partial class Program
 {
     private const int DefaultTimeInMinutesToWaitBeforeTriggeringCircuitBreaker = 120;
     private const string EndpointName = "NServiceBusEndpoint";
-    private const string TransportConnectionStringName = "ServiceBus";
+    public const string TransportConnectionStringName = "ServiceBus";
 }

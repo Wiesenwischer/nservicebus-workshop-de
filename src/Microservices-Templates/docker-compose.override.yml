@@ -20,3 +20,5 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://0.0.0.0:80
+      - HealthChecksUI__HealthChecks__0__Name=NServiceBus server health check
+      - HealthChecksUI__HealthChecks__0__Uri=http://nservicebusendpoint/hc
