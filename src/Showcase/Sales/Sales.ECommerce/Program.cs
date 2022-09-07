@@ -4,6 +4,9 @@ using Sales.ECommerce.Data;
 using Sales.ECommerce.Hubs;
 using Sales.Messages.Commands;
 using Serilog;
+using Serilog.Exceptions;
+using Serilog.Exceptions.Core;
+using Serilog.Exceptions.MsSqlServer.Destructurers;
 
 var configuration = GetConfiguration();
 Log.Logger = CreateSerilogLogger(configuration, EndpointName);
@@ -88,6 +91,9 @@ Serilog.ILogger CreateSerilogLogger(IConfiguration configuration, string applica
         .MinimumLevel.Verbose()
         .Enrich.WithProperty("ApplicationContext", applicationContext)
         .Enrich.FromLogContext()
+        .Enrich.WithExceptionDetails(new DestructuringOptionsBuilder()
+            .WithDefaultDestructurers()
+            .WithDestructurers(new[] { new SqlExceptionDestructurer() })).Enrich.FromLogContext()
         .WriteTo.Console()
         .WriteTo.Http(string.IsNullOrWhiteSpace(logstashUrl) ? "http://logstash:8080" : logstashUrl, null)
         .ReadFrom.Configuration(configuration)
