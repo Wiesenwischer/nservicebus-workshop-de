@@ -11,3 +11,11 @@ services:
       dockerfile: Showcase/Sales/Sales.ECommerce/Dockerfile
     depends_on:
       - sqldb
+      - sales.ordering
+
+  sales.ordering:
+    image: ${DOCKER_REGISTRY-}salesordering
+    build:
+      context: .
+      dockerfile: showcase/sales/sales.ordering/Dockerfile
+

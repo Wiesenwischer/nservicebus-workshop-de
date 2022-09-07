@@ -16,9 +16,16 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ConnectionStrings__ServiceBus=Data Source=sqldb;Database=Showcase;User ID=sa;Password=P@ssw0rd!#;Max Pool Size=100;Trust Server Certificate=True
-      - ServiceBusTimeToWaitBeforeTriggeringCircuitBreaker=120
+      - ServiceBusTimeToWaitBeforeTriggeringCircuitBreaker=5
+
+  sales.ordering:
+    environment:
+      - DOTNET_ENVIRONMENT=Development
+      - ConnectionStrings__ServiceBus=Data Source=sqldb;Database=Showcase;User ID=sa;Password=P@ssw0rd!#;Max Pool Size=100;Trust Server Certificate=True
+      - ServiceBusTimeToWaitBeforeTriggeringCircuitBreaker=5
 
 volumes:
   showcase-sqldata:
     external: false
+
 
