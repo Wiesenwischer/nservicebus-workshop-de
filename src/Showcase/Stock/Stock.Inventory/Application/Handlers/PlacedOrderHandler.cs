@@ -22,18 +22,12 @@ public class OrderPlacedHandler
 
         if (_availableProductsList.Contains(message.ProductId))
         {
-            await context.Publish(new OrderStockConfirmed
-            {
-                OrderId = message.OrderId
-            });
+            await context.Publish(new OrderStockConfirmed(message.OrderId));
             _logger.LogInformation("Published {MessageType} for OrderId: {OrderId}",nameof(OrderStockConfirmed), message.OrderId);
         }
         else
         {
-            await context.Publish(new OrderStockRejected
-            {
-                OrderId = message.OrderId
-            });
+            await context.Publish(new OrderStockRejected(message.OrderId));
             _logger.LogInformation("Published {MessageType} for OrderId: {OrderId}", nameof(OrderStockRejected), message.OrderId);
         }
     }

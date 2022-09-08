@@ -2,6 +2,11 @@
 {
     public class OrderStockConfirmed
     {
-        public string? OrderId { get; set; }
+        public OrderStockConfirmed(string orderId)
+        {
+            OrderId = orderId;
+        }
+
+        public string OrderId { get; set; }
     }
 }

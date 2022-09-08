@@ -2,7 +2,12 @@
 {
     public class OrderStockRejected
     {
-        public string? OrderId { get; set; }
+        public OrderStockRejected(string orderId)
+        {
+            OrderId = orderId;
+        }
+
+        public string OrderId { get; }
     }
 }
 

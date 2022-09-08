@@ -2,8 +2,15 @@
 {
     public class PlaceOrder
     {
-        public string? OrderId { get; set; }
-        public string? ClientId { get; set; }
-        public string? ProductId { get; set; }
+        public PlaceOrder(string orderId, string clientId, string productId)
+        {
+            OrderId = orderId;
+            ClientId = clientId;
+            ProductId = productId;
+        }
+
+        public string OrderId { get; }
+        public string ClientId { get; }
+        public string ProductId { get; }
     }
 }

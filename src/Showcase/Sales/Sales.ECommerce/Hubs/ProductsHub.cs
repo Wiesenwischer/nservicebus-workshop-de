@@ -19,12 +19,10 @@ namespace Sales.ECommerce.Hubs
 
         public async Task PlaceOrder(Product product)
         {
-            var placeOrder = new PlaceOrder
-            {
-                OrderId = Guid.NewGuid().ToString(),
-                ClientId = this.Context.ConnectionId,
-                ProductId = product.Identifier
-            };
+            var placeOrder = new PlaceOrder(
+                orderId: Guid.NewGuid().ToString(),
+                clientId: Context.ConnectionId,
+                productId: product.Identifier);
 
             try
             {

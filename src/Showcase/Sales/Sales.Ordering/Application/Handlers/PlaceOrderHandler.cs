@@ -19,12 +19,11 @@ public class PlaceOrderHandler :
     {
         _logger.LogInformation("Received PlaceOrder: {@Message}", message);
 
-        var orderPlaced = new OrderPlaced
-        {
-            OrderId = message.OrderId,
-            ClientId = message.ClientId,
-            ProductId = message.ProductId
-        };
+        var orderPlaced = new OrderPlaced(
+            orderId: message.OrderId,
+            clientId: message.ClientId,
+            productId: message.ProductId
+        );
         return context.Publish(orderPlaced);
     }
 
