@@ -1,0 +1,83 @@
+﻿@page "/"
+@using Sales.ECommerce.Data
+@using Microsoft.AspNetCore.SignalR.Client
+@implements IAsyncDisposable
+
+<PageTitle>Webshop</PageTitle>
+
+<h1>Hello!</h1>
+
+Welcome to our web shop.
+
+<h2>List of available NServiceBus products</h2>
+
+<EditForm Model="@_products">
+    <table>
+        @foreach (var product in _products)
+        {
+            <tr>
+                <td>
+                    <h4>@product.Title</h4>
+                    <p>@product.Description</p>
+                    <button @onclick="() => ExecutePlaceOrderForProduct(product)">Place order</button>
+                </td>
+            </tr>
+        }
+    </table>
+</EditForm>
+
+<h2>List of received orders</h2>
+<table>
+    @foreach (var order in _receivedOrders)
+    {
+        <tr>
+            <td>
+                <p>@order</p>
+            </td>
+        </tr>
+    }
+</table>
+
+@code
+{
+    private HubConnection? _hubConnection;
+    private readonly List<Product> _products = new List<Product>
+    {
+        new Product("videos", "Videos and Presentations", "Learn about SOA principles, systems design and the capabilities our platform brings to your system lifecycle."),
+        new Product("training", "Get some on-site training", "The fastest way to get a large team up to speed"),
+        new Product("documentation", "Community driven documentation", "At Particular we like to build things in a way that embraces our open source community. Documentation is no different and as such is hosted on GitHub for everyone to contribute."),
+        new Product("customers", "In good company", "Companies across all industry verticals, from the smallest startups to the Global 2000, rely on our platform every day."),
+        new Product("platform", "The .NET Service Platform", "Build better .NET service solutions using an integrated and comprehensive platform. Focus on developing your solution's unique features, while enjoying the out-of-the-box benefits of the Particular Service Platform.")
+    };
+    private List<string> _receivedOrders = new List<string>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _hubConnection = new HubConnectionBuilder()
+            .WithUrl("http://localhost/productsHub")
+            .Build();
+
+        _hubConnection.On<string>("OrderReceived", orderId =>
+        {
+            _receivedOrders.Add(orderId);
+            StateHasChanged();
+        });
+        await _hubConnection.StartAsync();
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_hubConnection is not null)
+        {
+            await _hubConnection.DisposeAsync();
+        }
+    }
+
+    private async Task ExecutePlaceOrderForProduct(Product product)
+    {
+        if (_hubConnection is not null)
+        {
+            await _hubConnection.SendAsync("PlaceOrder", product);
+        }
+    }
+}
