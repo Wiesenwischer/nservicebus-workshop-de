@@ -37,7 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Stock\Stock.Inventory\Stock.Inventory.csproj" />
+    <ProjectReference Include="..\..\Stock\Stock.Messages\Stock.Messages.csproj" />
     <ProjectReference Include="..\Sales.Messages\Sales.Messages.csproj" />
   </ItemGroup>
 
